@@ -1,1 +1,1 @@
-echo "web: streamlit run --server.port \$PORT app.py" > Procfile
+echo "web: streamlit run --server.port \$PORT app.py"
