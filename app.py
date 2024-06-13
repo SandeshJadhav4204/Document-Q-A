@@ -19,10 +19,6 @@ load_dotenv()
 groq_api_key = os.getenv('GROQ_API_KEY')
 os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 
-# Streamlit title and sidebar
-st.title("Gemma Model Document Q&A")
-st.sidebar.title("Settings")
-
 # Initialize session state
 if 'embeddings' not in st.session_state:
     st.session_state.embeddings = None
@@ -75,30 +71,38 @@ def load_document():
 
         vector_embedding(tmp_file_path)
 
-# Sidebar for uploading document
-with st.sidebar.expander("Upload Document"):
-    load_document()
+def main():
+    # Streamlit title and sidebar
+    st.title("Gemma Model Document Q&A")
+    st.sidebar.title("Settings")
 
-# Main content for asking questions
-prompt1 = st.text_input("Enter Your Question From Documents")
+    # Sidebar for uploading document
+    with st.sidebar.expander("Upload Document"):
+        load_document()
 
-if prompt1 and st.session_state.vectors:
-    document_chain = create_stuff_documents_chain(llm, prompt)
-    retriever = st.session_state.vectors.as_retriever()
-    retrieval_chain = create_retrieval_chain(retriever, document_chain)
-    start = time.process_time()
-    try:
-        response = retrieval_chain.invoke({'input': prompt1})
-        st.write("Response time:", time.process_time() - start)
-        st.write(response['answer'])
+    # Main content for asking questions
+    prompt1 = st.text_input("Enter Your Question From Documents")
 
-        # With a Streamlit expander for document context
-        with st.expander("Document Context"):
-            if "context" in response:
-                for i, doc in enumerate(response["context"]):
-                    st.write(doc.page_content)
-                    st.write("--------------------------------")
-            else:
-                st.write("No document context found.")
-    except Exception as e:
-        st.write(f"Error retrieving answer: {e}")
+    if prompt1 and st.session_state.vectors:
+        document_chain = create_stuff_documents_chain(llm, prompt)
+        retriever = st.session_state.vectors.as_retriever()
+        retrieval_chain = create_retrieval_chain(retriever, document_chain)
+        start = time.process_time()
+        try:
+            response = retrieval_chain.invoke({'input': prompt1})
+            st.write("Response time:", time.process_time() - start)
+            st.write(response['answer'])
+
+            # With a Streamlit expander for document context
+            with st.expander("Document Context"):
+                if "context" in response:
+                    for i, doc in enumerate(response["context"]):
+                        st.write(doc.page_content)
+                        st.write("--------------------------------")
+                else:
+                    st.write("No document context found.")
+        except Exception as e:
+            st.write(f"Error retrieving answer: {e}")
+
+if __name__ == "__main__":
+    main()

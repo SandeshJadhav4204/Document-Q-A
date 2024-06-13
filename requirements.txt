@@ -8,4 +8,5 @@ streamlit
 langchain_community
 python-dotenv
 pypdf
+gunicorn
 google-cloud-aiplatform>=1.38
