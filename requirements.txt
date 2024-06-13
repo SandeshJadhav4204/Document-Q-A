@@ -9,4 +9,7 @@ langchain_community
 python-dotenv
 pypdf
 gunicorn
+streamlit
+pytesseract
+pillow
 google-cloud-aiplatform>=1.38
