@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemma Model Document Q&A</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gemma Model Document Q&A</h1>
+        </header>
+        <section>
+            <form id="uploadForm" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Upload your document (PDF):</label>
+                    <input type="file" name="file" id="file" required>
+                    <button type="submit">Upload</button>
+                </div>
+            </form>
+            <div id="uploadStatus" class="status"></div>
+            {% if current_file %}
+            <div class="current-file">
+                <h3>Current File: {{ current_file }}</h3>
+                <form id="questionForm" method="post">
+                    <div class="form-group">
+                        <label for="question">Enter Your Question From Documents:</label>
+                        <input type="text" name="question" id="question" required>
+                        <button type="submit">Ask</button>
+                    </div>
+                </form>
+                <div id="questionStatus" class="status"></div>
+            </div>
+            <div id="uploadAnother" class="options">
+                <h4>Want to upload another file?</h4>
+                <form id="newUploadForm" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="newFile">Upload new document (PDF):</label>
+                        <input type="file" name="newFile" id="newFile" required>
+                        <button type="submit">Upload</button>
+                    </div>
+                </form>
+                <div id="newUploadStatus" class="status"></div>
+            </div>
+            {% endif %}
+        </section>
+        <section class="response-section">
+            {% if answer %}
+            <div class="response">
+                <h2>Response:</h2>
+                <p>{{ answer }}</p>
+                <h3>Response time: {{ response_time }} seconds</h3>
+            </div>
+            {% endif %}
+            {% if context %}
+            <div class="context">
+                <h3>Document Context:</h3>
+                {% for doc in context %}
+                <p>{{ doc.page_content }}</p>
+                <hr>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if message %}
+            <div class="message">{{ message }}</div>
+            {% endif %}
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>

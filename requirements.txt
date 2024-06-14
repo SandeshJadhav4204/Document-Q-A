@@ -12,4 +12,5 @@ gunicorn
 streamlit
 pytesseract
 pillow
+Flask
 google-cloud-aiplatform>=1.38
