@@ -17,7 +17,11 @@ load_dotenv()
 
 # Get the API keys
 groq_api_key = os.getenv('GROQ_API_KEY')
-os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
+google_api_key = os.getenv("GOOGLE_API_KEY")
+if google_api_key is None:
+    raise ValueError("GOOGLE_API_KEY environment variable is not set")
+
+os.environ["GOOGLE_API_KEY"] = google_api_key
 
 # Initialize session state
 session_state = {
